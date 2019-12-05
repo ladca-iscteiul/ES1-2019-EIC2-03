@@ -118,7 +118,49 @@ public class ExcelExporter {
 		return null;
 	}
 
-	
+	public synchronized String getLine(int r) {
+
+		//openStream();
+
+		XSSFRow row = sheet.getRow(r);
+		String line = "";
+		Iterator<Cell> cellIterator = row.cellIterator();
+		while(cellIterator.hasNext()) {
+			XSSFCell cell = (XSSFCell) cellIterator.next();
+
+			switch (cell.getCellType()) 
+			{
+			case NUMERIC:
+				line += String.valueOf(cell.getNumericCellValue()) + "<-->";
+				break;
+			case STRING:
+				line += cell.getStringCellValue() + "<-->";
+				break;
+			case BOOLEAN:
+				line += String.valueOf(cell.getBooleanCellValue()) + "<-->";
+				break;
+			}
+		}
+
+		//closeStream();
+
+		return line;
+	}
+
+	public synchronized String[][] dataToMatrix(){
+
+		//openStream();
+
+		String[][] data = new String[420][11];
+
+		for(int i = 1; i <= sheet.getLastRowNum(); i++ ) {
+			data[i-1] = getLine(i).split("<-->");
+		}
+
+		//closeStream(); 
+
+		return data;
+	}
 
 	public static ExcelExporter getInstance() {
 		return instance;
