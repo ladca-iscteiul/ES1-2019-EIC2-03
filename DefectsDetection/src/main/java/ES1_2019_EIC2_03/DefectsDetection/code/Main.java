@@ -10,7 +10,7 @@ public class Main {
 		SwingUtilities.invokeLater( new Runnable() {
 			
 			public void run() {
-				HomeGui frame = new HomeGui(new ExcelExporter());
+				HomeGui frame = new HomeGui();
 				frame.open();
 			}
 		});
