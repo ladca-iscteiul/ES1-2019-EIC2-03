@@ -12,6 +12,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 
 import ES1_2019_EIC2_03.DefectsDetection.code.CostumRule;
@@ -640,7 +641,7 @@ public class HomeGui extends JFrame {
 		
 		mntmExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Quer mesmo sair ?
+				//JOptionPane.showMessageDialog(HomeGui.this, "Deseja mesmo sair?");
 				System.exit(0);
 			}
 		});
@@ -649,7 +650,9 @@ public class HomeGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			if(!excelReader.isVisible())
 				excelReader.open();
-			else { /*abrir Jdialog*/}
+			else { 
+				JOptionPane.showMessageDialog(HomeGui.this, "Exportador de Excel já está aberto");
+			}
 			}
 		});
 		
@@ -716,7 +719,9 @@ public class HomeGui extends JFrame {
 		mntmEditExistingLMR.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if(customLM.isEmpty()) {} //doSomething
+				if(customLM.isEmpty()) {
+					JOptionPane.showMessageDialog(HomeGui.this, "Não tem regras long_method() para editar");
+				} 
 				else {
 					new SwingWorker<DefaultListModel<CostumRule>, Void>() {
 						@Override
@@ -745,7 +750,9 @@ public class HomeGui extends JFrame {
 		
 		mntmEditExistingFER.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(customFE.isEmpty()) {} // do something
+				if(customFE.isEmpty()) {
+					JOptionPane.showMessageDialog(HomeGui.this, "Não tem regras feature_envy() para editar");
+				}
 				else {
 					new SwingWorker<DefaultListModel<CostumRule>, Void>() {
 						@Override

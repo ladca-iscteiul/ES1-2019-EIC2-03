@@ -19,6 +19,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -341,10 +342,12 @@ public class CreatRuleGUI extends JDialog {
 						setVisible(false);
 					else if(!list.contains(new CostumRule(defect, txtFRule.getText()))) {
 						setVisible(false);
-					}else { } // dosomething
-
-				else {}
-				//do something
+					}else { 
+						JOptionPane.showMessageDialog(CreatRuleGUI.this, "Regra já existe");
+					}
+				else {
+					JOptionPane.showMessageDialog(CreatRuleGUI.this, "Regra inválida");
+				}
 			}
 		});
 
@@ -717,7 +720,9 @@ public class CreatRuleGUI extends JDialog {
 
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(listRules.getSelectedValue()== null) {} // do something
+				if(listRules.getSelectedValue()== null) {
+					JOptionPane.showMessageDialog(CreatRuleGUI.this, "Não tem nenhuma regra selecionada para guardar");
+				}
 				else {
 					lastEdited = listRules.getSelectedValue();
 					txtFRule.setText(((CostumRule) lastEdited).toString());
@@ -727,15 +732,18 @@ public class CreatRuleGUI extends JDialog {
 
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(lastEdited == null) {} //so something
-
+				if(lastEdited == null) {
+					JOptionPane.showMessageDialog(CreatRuleGUI.this, "Não tem nenhuma regra selecionada para guardar");
+				} 
 				else {
 					if(CostumRule.isValidRule(txtFRule.getText())) {
 						int index = list.indexOf(lastEdited);
 						list.removeElement(lastEdited);
 						list.add(index, new CostumRule(defect, txtFRule.getText()));
 						lastEdited = null;
-					}else {} //doSomething
+					}else {
+						JOptionPane.showMessageDialog(CreatRuleGUI.this, "Regra inválida");
+					}
 				}
 			}
 		});
