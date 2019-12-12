@@ -46,6 +46,7 @@ public class CostumRuleTest extends TestCase {
 		assertEquals("LOC > 80.0 AND CYCLO >10.0",lm.getRule());
 		assertEquals( "ATFD > 4.0 AND LAA < 0.42",fe.getRule());
 
-	}
 
+
+	}
 }
