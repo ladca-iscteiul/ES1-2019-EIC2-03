@@ -1,4 +1,4 @@
-package ES1_2019_EIC2_03.DefectsDetection.tests;
+package ES1_2019_EIC2_03.DefectsDetection.code;
 import  ES1_2019_EIC2_03.DefectsDetection.code.*;
 
 import junit.framework.TestCase;
