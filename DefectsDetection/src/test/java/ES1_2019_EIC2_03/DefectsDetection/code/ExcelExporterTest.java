@@ -1,5 +1,4 @@
 package ES1_2019_EIC2_03.DefectsDetection.code;
-import  ES1_2019_EIC2_03.DefectsDetection.code.*;
 
 import junit.framework.TestCase;
 
@@ -9,8 +8,7 @@ public class ExcelExporterTest extends TestCase {
 
 	
 	protected void setUp() throws Exception {
-		e= new ExcelExporter();
-		
+		e= new ExcelExporter();		
 	}
 
 	public void testExcelExporter() {
@@ -30,11 +28,11 @@ public class ExcelExporterTest extends TestCase {
 	}
 
 	public void testDataToMatrix() {
-		fail("Not yet implemented");
+		assertNotNull(e.dataToMatrix());
 	}
 
 	public void testGetInstance() {
-		fail("Not yet implemented");
+		assertNotNull(e.getInstance());
 	}
 
 }

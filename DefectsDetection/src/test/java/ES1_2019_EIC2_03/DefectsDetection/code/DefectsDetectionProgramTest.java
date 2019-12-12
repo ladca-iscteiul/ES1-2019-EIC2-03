@@ -1,5 +1,4 @@
 package ES1_2019_EIC2_03.DefectsDetection.code;
-import ES1_2019_EIC2_03.DefectsDetection.code.*;
 import junit.framework.TestCase;
 
 public class DefectsDetectionProgramTest extends TestCase {
@@ -18,27 +17,27 @@ public class DefectsDetectionProgramTest extends TestCase {
 	}
 
 	public void testGetCorrectEvaluations() {
-		fail("Not yet implemented");
+		assertEquals(2, df.getCorrectEvaluations());
 	}
 
 	public void testGetIncorrectEvaluations() {
-		fail("Not yet implemented");
+		assertEquals(2, df.getIncorrectEvaluations());
 	}
 
 	public void testGetDci() {
-		fail("Not yet implemented");
+		assertEquals(1, df.getDci());
 	}
 
 	public void testGetDii() {
-		fail("Not yet implemented");
+		assertEquals(1, df.getDii());
 	}
 
 	public void testGetAdci() {
-		fail("Not yet implemented");
+		assertEquals(1, df.getAdci());
 	}
 
 	public void testGetAdii() {
-		fail("Not yet implemented");
+		assertEquals(1, df.getAdii());
 	}
 
 }
