@@ -82,6 +82,8 @@ public class HomeGui extends JFrame {
 	private JTextField txtFPMDIsLong;
 	private JButton btnGetEvaluation;
 	private JButton btnToolQPMD;
+	private JButton btnToolQCLongMethod;
+	private JButton btnToolQCFeatureEnvy;
 	private JTextField txtFCostumIsLong;
 	private JTextField txtFCostumIsFeature;
 	private JMenuItem mntmCreatNewLMRule;
@@ -160,6 +162,71 @@ public class HomeGui extends JFrame {
 	
 	public void open() {
 		setVisible(true);
+	}
+	
+	private void getCustomRuleStats(Defects defects) {
+		
+		Interpreter interpreter = new Interpreter();
+		int index;
+		int dci=0;
+		int dii=0;
+		int adci=0;
+		int adii=0;
+		
+		if(defects.equals(Defects.LONG_METHOD)) {
+			
+			CostumRule rule = (CostumRule) listCLongMethod.getSelectedValue();
+			index = customLM.indexOf(rule);
+
+			for (int id = 1; id <= excelExporter.NumRows(); id++) {
+
+				String data[] = excelExporter.getLine(id).split("<-->");
+				String code = translateRuleToJavaCode(id, rule.getRule());
+
+				try {
+					if (data[IS_LONG_METHOD].equals("true") && ((Boolean) interpreter.eval(code)).equals(true)) {
+						dci++;
+					}else if (data[IS_LONG_METHOD].equals("false") && ((Boolean) interpreter.eval(code)).equals(true)) {
+						dii++;
+					}else if (data[IS_LONG_METHOD].equals("false") && ((Boolean) interpreter.eval(code)).equals(false)) {
+						adci++;
+					}else if (data[IS_LONG_METHOD].equals("true") && ((Boolean) interpreter.eval(code)).equals(false)) {
+						adii++;
+					}
+				} catch (EvalError e) {
+					e.printStackTrace();
+				}
+			}
+			customLM.get(index).setStats(dci, dii, adci, adii);
+		}
+		
+		if(defects.equals(Defects.FEATURE_ENVY)) {
+			CostumRule rule = (CostumRule) listCFeatureEnvy.getSelectedValue();
+			index = customFE.indexOf(rule);
+
+			for (int id = 1; id <= excelExporter.NumRows(); id++) {
+
+				String data[] = excelExporter.getLine(id).split("<-->");
+				String code = translateRuleToJavaCode(id, rule.getRule());
+
+				try {
+					if (data[IS_FEATURE_ENVY].equals("true") && ((Boolean) interpreter.eval(code)).equals(true)) {
+						dci++;
+					}else if (data[IS_FEATURE_ENVY].equals("false") && ((Boolean) interpreter.eval(code)).equals(true)) {
+						dii++;
+					}else if (data[IS_FEATURE_ENVY].equals("false") && ((Boolean) interpreter.eval(code)).equals(false)) {
+						adci++;
+					}else if (data[IS_FEATURE_ENVY].equals("true") && ((Boolean) interpreter.eval(code)).equals(false)) {
+						adii++;
+					}
+				} catch (EvalError e) {
+					e.printStackTrace();
+				}
+			}
+			customFE.get(index).setStats(dci, dii, adci, adii);
+			
+		}
+		
 	}
 	
 	public String translateRuleToJavaCode(int id, String rule) {
@@ -271,10 +338,10 @@ public class HomeGui extends JFrame {
 		
 		JScrollPane scrlPCFeatureEnvy = new JScrollPane();
 		
-		JButton btnToolQCLongMethod = new JButton("Tool Quality");
+		btnToolQCLongMethod = new JButton("Tool Quality");
 		btnToolQCLongMethod.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		
-		JButton btnToolQCFeatureEnvy = new JButton("Tool Quality");
+		btnToolQCFeatureEnvy = new JButton("Tool Quality");
 		btnToolQCFeatureEnvy.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		
 		JLabel lblisFeatureEnvy2 = new JLabel("is_feature_envy");
@@ -905,6 +972,35 @@ public class HomeGui extends JFrame {
 				JOptionPane.showMessageDialog(HomeGui.this, "Total de métodos avaliados: " + pmd.getTotalMehtodsEvaluated() + "\nTotal de avaliações certas: " + pmd.getCorrectEvaluations()
 				+"\nTotal de avaliações erradas: " + pmd.getIncorrectEvaluations()	+"\nDefeitos Corretamente Identificados: " + pmd.getDci() + "\nDefeitos Incorretamente Identificados: " 
 				+ pmd.getDii() + "\nAusências de Defeitos Corretamente Identificadas: " + pmd.getAdci() + "\nAusências de Defeitos Incorretamente Identificadas: " + pmd.getAdii(), "PMD", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
+		btnToolQCLongMethod.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(listCLongMethod.getSelectedValue() == null)
+					JOptionPane.showMessageDialog(HomeGui.this, "Nenhuma regra selecionada");	
+				if(((CostumRule) listCLongMethod.getSelectedValue()).getTotalMehtodsEvaluated() < 0)
+					getCustomRuleStats(Defects.LONG_METHOD);
+				CostumRule rule = (CostumRule) listCLongMethod.getSelectedValue();
+				System.out.println(rule.getTotalMehtodsEvaluated());
+				JOptionPane.showMessageDialog(HomeGui.this, "Total de métodos avaliados: " + rule.getTotalMehtodsEvaluated() + "\nTotal de avaliações certas: " + rule.getCorrectEvaluations()
+				+"\nTotal de avaliações erradas: " + rule.getIncorrectEvaluations()	+"\nDefeitos Corretamente Identificados: " + rule.getDci() + "\nDefeitos Incorretamente Identificados: " 
+				+ rule.getDii() + "\nAusências de Defeitos Corretamente Identificadas: " + rule.getAdci() + "\nAusências de Defeitos Incorretamente Identificadas: " + rule.getAdii(), 
+				"Costum rule for long_method() Status", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
+		btnToolQCFeatureEnvy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(listCFeatureEnvy.getSelectedValue() == null)
+					JOptionPane.showMessageDialog(HomeGui.this, "Nenhuma regra selecionada");
+				if(((CostumRule) listCFeatureEnvy.getSelectedValue()).getTotalMehtodsEvaluated() < 0)
+					getCustomRuleStats(Defects.FEATURE_ENVY);
+				CostumRule rule = (CostumRule) listCFeatureEnvy.getSelectedValue();
+				JOptionPane.showMessageDialog(HomeGui.this, "Total de métodos avaliados: " + rule.getTotalMehtodsEvaluated() + "\nTotal de avaliações certas: " + rule.getCorrectEvaluations()
+				+"\nTotal de avaliações erradas: " + rule.getIncorrectEvaluations()	+"\nDefeitos Corretamente Identificados: " + rule.getDci() + "\nDefeitos Incorretamente Identificados: " 
+				+ rule.getDii() + "\nAusências de Defeitos Corretamente Identificadas: " + rule.getAdci() + "\nAusências de Defeitos Incorretamente Identificadas: " + rule.getAdii(), 
+				"Costum rule for feature_envy() Status", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		

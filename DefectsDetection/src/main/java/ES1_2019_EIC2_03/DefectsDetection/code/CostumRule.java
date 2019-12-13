@@ -9,15 +9,46 @@ public class CostumRule {
 
 	private Defects defect;
 	private String rule;
+	private int dci;
+	private int dii ;
+	private int adci;
+	private int adii;
 	
-//	public static void main(String[] args) {
-//		CostumRule rule = new CostumRule("1",Defects.LONG_METHOD, "LOC == 3.0 AND CYCLO == 1.0 AND ATFD == 0.0 AND LAA == 1.0 ");
-//		System.out.println(rule.getMethodEvaluation(1));
-//	}
-//	
 	public CostumRule(Defects defect, String rule) {
 		this.defect = defect;
 		this.rule = rule;
+		this.dci = -1;
+		this.dii = -1;
+		this.adci = -1;
+		this.adii = -1;
+	}
+	
+	public int getTotalMehtodsEvaluated(){
+		return dci+dii+adci+adii;
+	}
+	
+	public int getCorrectEvaluations() {
+		return dci+adci;
+	}
+	
+	public int getIncorrectEvaluations() {
+		return dii+adii;
+	}
+	
+	public int getDci() {
+		return dci;
+	}
+
+	public int getDii() {
+		return dii;
+	}
+
+	public int getAdci() {
+		return adci;
+	}
+
+	public int getAdii() {
+		return adii;
 	}
 	
 	public Defects getDefect() {
@@ -26,6 +57,13 @@ public class CostumRule {
 	
 	public String getRule() {
 		return rule;
+	}
+	
+	public void setStats(int dci, int dii, int adci, int adii) {
+		this.dci = dci;
+		this.dii = dii;
+		this.adci = adci;
+		this.adii = adii;
 	}
 	
 	//Ver se a regra introduzida pelo user é válida
@@ -83,16 +121,6 @@ public class CostumRule {
 
 		return res;
 	} 
-	
-	protected void readSavedFile() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	protected void save() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	@Override
 	public boolean equals(Object o) {
