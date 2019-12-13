@@ -21,17 +21,15 @@ import java.awt.Font;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
-public class ExcelReaderGui extends JDialog {
+public class ExcelReaderGui extends JDialog{
+
+	private final static ExcelReaderGui instance = new ExcelReaderGui();
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable tableExcel;
 	private String[][] data;
-	
-	/**
-	 * Create the dialog.
-	 */
-	
-	public ExcelReaderGui(String[][] data) {
+
+	private ExcelReaderGui() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Throwable e) {
@@ -43,11 +41,15 @@ public class ExcelReaderGui extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
+	}
+	
+	public static ExcelReaderGui getInstance() {
+		return instance;
+	}
+	
+	public void setDataAndInitiate(String[][] data) {
 		this.data = data;
-		
 		addComponents();
-		
 	}
 	
 	private void addComponents() {

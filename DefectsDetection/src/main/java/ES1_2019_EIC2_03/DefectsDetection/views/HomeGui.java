@@ -95,10 +95,11 @@ public class HomeGui extends JFrame {
 	private JMenuItem mntmExit;
 	private JMenuItem mntmEditExistingLMR;
 	private JMenuItem mntmEditExistingFER;
+	private JMenuItem mntmSave;
 
 	
 	public HomeGui() {
-		
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Throwable e) {
@@ -106,17 +107,31 @@ public class HomeGui extends JFrame {
 		}
 		
 		setTitle("DefectsDetection");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1100, 687);
+		
+		//Thread que vai buscar as instancias do ExcelExporter e ExcelReaderGuie e vai buscar as estatísticas dos programas iPlasma e PM
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground()  {
+				excelExporter = ExcelExporter.getInstance();
+				getProgramStats();
+				excelReader= ExcelReaderGui.getInstance();
+				excelReader.setDataAndInitiate(excelExporter.dataToMatrix());
+				return null;
+			}
+		}.execute();
+		
+		//Thread que vai buscar a instancia de CreatRuleGUI D
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground()  {
+				newRuleViewer = CreatRuleGUI.getInstance();
+				return null;
+			}
+		}.execute();
 
-		this.excelExporter = ExcelExporter.getInstance();
 		
-		this.excelReader= new ExcelReaderGui(excelExporter.dataToMatrix());
-		this.newRuleViewer = new CreatRuleGUI();
-		
-		
-		
-		getProgramStats();
 		addComponents();
 		creatEvents();
 	}
@@ -715,14 +730,14 @@ public class HomeGui extends JFrame {
 		
 		mntmImportExcelFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			if(!excelReader.isVisible())
-				excelReader.open();
-			else { 
-				JOptionPane.showMessageDialog(HomeGui.this, "Exportador de Excel já está aberto");
-			}
+				if(!excelReader.isVisible())
+					excelReader.open();
+				else { 
+					JOptionPane.showMessageDialog(HomeGui.this, "Exportador de Excel já está aberto");
+				}
 			}
 		});
-		
+
 		mntmCreatNewLMRule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new SwingWorker<String, Void>() {
@@ -793,8 +808,8 @@ public class HomeGui extends JFrame {
 					new SwingWorker<DefaultListModel<CostumRule>, Void>() {
 						@Override
 						protected DefaultListModel<CostumRule> doInBackground()  {
-							newRuleViewer.addComponentsEdit(Defects.LONG_METHOD);
 							newRuleViewer.setList(customLM);
+							newRuleViewer.addComponentsEdit(Defects.LONG_METHOD);
 							newRuleViewer.setModal(true);
 							newRuleViewer.open();
 							return newRuleViewer.getNewList();
@@ -824,8 +839,151 @@ public class HomeGui extends JFrame {
 					new SwingWorker<DefaultListModel<CostumRule>, Void>() {
 						@Override
 						protected DefaultListModel<CostumRule> doInBackground()  {
-							newRuleViewer.addComponentsEdit(Defects.FEATURE_ENVY);
 							newRuleViewer.setList(customFE);
+							newRuleViewer.addComponentsEdit(Defects.FEATURE_ENVY);
+							newRuleViewer.setModal(true);
+							newRuleViewer.open();
+							return newRuleViewer.getNewList();
+						}
+						@Override
+						protected void done() {
+							try {
+								customLM = get();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							} catch (ExecutionException e) {
+								e.printStackTrace();
+
+							}
+						}
+					}.execute();
+				}
+			}
+		});
+		
+		btnGetEvaluation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new SwingWorker<String[][], Void>() {
+					
+					//1->txtFTrueIsLong
+					//2->txtFTrueIsFeature
+					//3->txtFIPlasmaIsLong
+					//4->txtFPMDIsLong
+					//5->txtFCostumIsLong
+					//6->txtFCostumIsFeature
+					
+					@Override
+					protected String[][] doInBackground() {
+						
+						int methodId = (Integer) spnrMethodID.getValue();
+						String[][] data = new String[6][2];
+						
+						data[0][0] = "1";
+						data[1][0] = "2";
+						data[2][0] = "3";
+						data[3][0] = "4";
+						
+						data[0][1] = String.valueOf(excelExporter.getElementAt(methodId, IS_LONG_METHOD));
+						data[1][1] = String.valueOf(excelExporter.getElementAt(methodId, IS_FEATURE_ENVY));
+						data[2][1] = String.valueOf(excelExporter.getElementAt(methodId, IPLASMA));
+						data[3][1] = String.valueOf(excelExporter.getElementAt(methodId, PMD));
+						
+						Interpreter interpreter = new Interpreter();
+						
+						if(listCLongMethod.getSelectedValue() == null) {
+							data[4][0] = "";
+							txtFCostumIsLong.setText("");
+						}else {
+							data[4][0] = "5";
+							try {
+								data[4][1] = String.valueOf((Boolean) interpreter.eval(translateRuleToJavaCode(methodId, listCLongMethod.getSelectedValue().toString())));
+							} catch (EvalError e) {
+								e.printStackTrace();
+							}
+						}
+						
+						if(listCFeatureEnvy.getSelectedValue() == null) {
+							data[5][0] = "";
+							txtFCostumIsFeature.setText("");
+						}else {
+							data[5][0] = "6";
+							try {
+								data[5][1] = String.valueOf((Boolean) interpreter.eval(translateRuleToJavaCode(methodId, listCFeatureEnvy.getSelectedValue().toString())));
+							} catch (EvalError e) {
+								e.printStackTrace();
+							}
+						}
+						
+						return data;
+						
+					}
+					
+					@Override 
+					protected void done () {
+						
+						String[][] txtFValues = null;
+						
+						try {
+							txtFValues = get();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+						
+						for(int x = 0; x < txtFValues.length; x++) {
+							
+							if(txtFValues[x][0].equals("")) {
+								break;
+							}
+							
+							if (txtFValues[x][0].equals("1")){
+								txtFTrueIsLong.setText(txtFValues[x][1]);
+								continue;
+							}
+							
+							if (txtFValues[x][0].equals("2")){
+								txtFTrueIsFeature.setText(txtFValues[x][1]);
+								continue;
+							}
+							
+							if (txtFValues[x][0].equals("3")){
+								txtFIPlasmaIsLong.setText(txtFValues[x][1]);
+								continue;
+							}
+							
+							if (txtFValues[x][0].equals("4")){
+								txtFPMDIsLong.setText(txtFValues[x][1]);
+								continue;
+							}
+							
+							if (txtFValues[x][0].equals("5")){
+								txtFCostumIsLong.setText(txtFValues[x][1]);
+								continue;
+							}
+							
+							if (txtFValues[x][0].equals("6")){
+								txtFCostumIsFeature.setText(txtFValues[x][1]);
+								continue;
+							}
+						}
+					}
+				}.execute();
+				
+			}
+		});
+		
+		mntmEditExistingFER.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(customFE.isEmpty()) {
+					JOptionPane.showMessageDialog(HomeGui.this, "Não tem regras feature_envy() para editar");
+				}
+				else {
+					new SwingWorker<DefaultListModel<CostumRule>, Void>() {
+						@Override
+						protected DefaultListModel<CostumRule> doInBackground()  {
+							newRuleViewer.setList(customFE);
+							newRuleViewer.addComponentsEdit(Defects.FEATURE_ENVY);
 							newRuleViewer.setModal(true);
 							newRuleViewer.open();
 							return newRuleViewer.getNewList();
@@ -977,8 +1135,10 @@ public class HomeGui extends JFrame {
 		
 		btnToolQCLongMethod.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(listCLongMethod.getSelectedValue() == null)
+				if(listCLongMethod.getSelectedValue() == null) {
 					JOptionPane.showMessageDialog(HomeGui.this, "Nenhuma regra selecionada");	
+					return;
+				}
 				if(((CostumRule) listCLongMethod.getSelectedValue()).getTotalMehtodsEvaluated() < 0)
 					getCustomRuleStats(Defects.LONG_METHOD);
 				CostumRule rule = (CostumRule) listCLongMethod.getSelectedValue();
@@ -992,8 +1152,10 @@ public class HomeGui extends JFrame {
 		
 		btnToolQCFeatureEnvy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(listCFeatureEnvy.getSelectedValue() == null)
+				if(listCFeatureEnvy.getSelectedValue() == null) {
 					JOptionPane.showMessageDialog(HomeGui.this, "Nenhuma regra selecionada");
+					return;
+				}
 				if(((CostumRule) listCFeatureEnvy.getSelectedValue()).getTotalMehtodsEvaluated() < 0)
 					getCustomRuleStats(Defects.FEATURE_ENVY);
 				CostumRule rule = (CostumRule) listCFeatureEnvy.getSelectedValue();
@@ -1001,6 +1163,15 @@ public class HomeGui extends JFrame {
 				+"\nTotal de avaliações erradas: " + rule.getIncorrectEvaluations()	+"\nDefeitos Corretamente Identificados: " + rule.getDci() + "\nDefeitos Incorretamente Identificados: " 
 				+ rule.getDii() + "\nAusências de Defeitos Corretamente Identificadas: " + rule.getAdci() + "\nAusências de Defeitos Incorretamente Identificadas: " + rule.getAdii(), 
 				"Costum rule for feature_envy() Status", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int dialog = JOptionPane.showConfirmDialog(HomeGui.this, "Tem a certeza que quer sair?", "Sair", JOptionPane.YES_NO_OPTION);
+				if (dialog == JOptionPane.YES_OPTION)
+					System.exit(0);
 			}
 		});
 		

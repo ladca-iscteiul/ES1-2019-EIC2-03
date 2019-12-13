@@ -35,12 +35,14 @@ import javax.swing.border.MatteBorder;
 import java.awt.Color;
 
 public class CreatRuleGUI extends JDialog {
+	
+	private final static CreatRuleGUI instance = new CreatRuleGUI();
 
 	private JTextField txtFRule;
 	private Object lastEdited = null;
 	private DefaultListModel<CostumRule> list = new DefaultListModel<CostumRule>();
 
-	public CreatRuleGUI() {
+	private CreatRuleGUI() {
 		setBounds(100, 100, 890, 400);
 
 		try {
@@ -48,8 +50,10 @@ public class CreatRuleGUI extends JDialog {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-
-		//addComponentsEdit();	
+	}
+	
+	public static CreatRuleGUI getInstance() {
+		return instance;
 	}
 
 	public void open() {
@@ -423,7 +427,6 @@ public class CreatRuleGUI extends JDialog {
 		});
 		scrollPane.setViewportView(listRules);
 
-		//listRules.getSelectedValue().toString()
 		txtFRule = new JTextField("");
 		txtFRule.setEditable(false);
 		txtFRule.setColumns(10);
@@ -739,6 +742,8 @@ public class CreatRuleGUI extends JDialog {
 					if(CostumRule.isValidRule(txtFRule.getText())) {
 						int index = list.indexOf(lastEdited);
 						list.removeElement(lastEdited);
+						if(txtFRule.getText().equals(""))
+							return;
 						list.add(index, new CostumRule(defect, txtFRule.getText()));
 						lastEdited = null;
 					}else {
@@ -750,7 +755,7 @@ public class CreatRuleGUI extends JDialog {
 
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				txtFRule.setText("");
+				txtFRule.setText(((CostumRule) lastEdited).toString());
 			}
 		});
 
