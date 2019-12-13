@@ -38,6 +38,9 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.awt.event.ActionEvent;
@@ -289,7 +292,61 @@ public class HomeGui extends JFrame {
 		
 }
 
-	
+	private int save() {
+		File saveFile = new File("src\\main\\java\\ES1_2019_EIC2_03\\DefectsDetection\\resources\\UserData.txt");
+		PrintWriter pw = null;
+		int status = 0;
+		try {
+			
+			if(!saveFile.exists())
+				saveFile.createNewFile();
+			
+			pw = new PrintWriter(saveFile);
+			
+			for(int i = 0; i < customLM.size(); i++) {
+				pw.println(customLM.get(i).getDefect() + "<-->" + customLM.get(i).getRule());
+			}
+			
+			for(int i = 0; i < customFE.size(); i++) {
+				pw.println(customFE.get(i).getDefect() + "<-->" + customFE.get(i).getRule());
+			}
+			
+		}catch(IOException e) {
+			status = -1;
+			e.printStackTrace();
+		}finally {
+			if(pw != null)
+				pw.close();
+		}
+		return status;
+	}
+
+	private void readMemory(){
+		Scanner s = null;
+		try {
+			s = new Scanner(new File("src\\main\\java\\ES1_2019_EIC2_03\\DefectsDetection\\resources\\UserData.txt"));
+			
+			while(s.hasNextLine()) {
+				String[] line = s.nextLine().split("<-->");
+				
+				if (line[0].equals(Defects.LONG_METHOD.toString())){
+					if(CostumRule.isValidRule(line[1]))
+						customLM.addElement(new CostumRule(Defects.LONG_METHOD, line[1]));
+				}
+				
+				if (line[0].equals(Defects.FEATURE_ENVY.toString())){
+					if(CostumRule.isValidRule(line[1]))
+						customFE.addElement(new CostumRule(Defects.FEATURE_ENVY, line[1]));
+				}
+			}
+				
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally {
+			if(s != null)
+				s.close();
+		}
+	}
 
 	private void addComponents() {
 		
@@ -721,10 +778,34 @@ public class HomeGui extends JFrame {
 	
 	private void creatEvents() {
 		
+		mntmSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int status = save();
+				if(status == 0) {
+					JOptionPane.showMessageDialog(HomeGui.this, "Dados guardados com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+				}
+				if(status == -1) {
+					JOptionPane.showMessageDialog(HomeGui.this, "Ocorreu um erro a guardar os dados", "Erro", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+
+		
 		mntmExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//JOptionPane.showMessageDialog(HomeGui.this, "Deseja mesmo sair?");
-				System.exit(0);
+				int dialog = JOptionPane.showConfirmDialog(HomeGui.this, "Deseja guardar os dados antes de sair?", "Guardar", JOptionPane.INFORMATION_MESSAGE);
+				if (dialog == JOptionPane.YES_OPTION) {
+					int status = save();
+					if(status == 0) {
+						JOptionPane.showMessageDialog(HomeGui.this, "Dados guardados com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					}
+					if(status == -1) {
+						JOptionPane.showMessageDialog(HomeGui.this, "Ocorreu um erro a guardar os dados", "Erro", JOptionPane.INFORMATION_MESSAGE);
+					}
+					System.exit(0);
+				}
+				if (dialog == JOptionPane.NO_OPTION)
+					System.exit(0);
 			}
 		});
 		
