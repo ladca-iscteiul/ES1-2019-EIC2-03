@@ -36,12 +36,14 @@ import java.awt.Color;
 
 public class CreatRuleGUI extends JDialog {
 	
+	
 	private final static CreatRuleGUI instance = new CreatRuleGUI();
 
 	private JTextField txtFRule;
 	private Object lastEdited = null;
 	private DefaultListModel<CostumRule> list = new DefaultListModel<CostumRule>();
 
+	/** Classe representante da janela referente a criacao de novas regras*/
 	private CreatRuleGUI() {
 		setBounds(100, 100, 890, 400);
 
@@ -56,28 +58,35 @@ public class CreatRuleGUI extends JDialog {
 		return instance;
 	}
 
+	/**Metodo que torna a janela visivel*/
+	
 	public void open() {
 		setVisible(true);
 	}
-
+	
+	/**Metodo Setter da lista de Costum RUles
+	 * @param list lista de costum rules*/
+	
 	public void setList( DefaultListModel<CostumRule> list) {
 		this.list = list;
 	}
-
+	
+	/**Metodo Getter do texto no TextField de criacao/edicao de regra pelo user
+	 * @return regra em string inserida pelo user*/
 	public String getTxtFieldContent() {
 		return txtFRule.getText();
 	}
 
+	/**Metodo Getter da lista de Custom Rules
+	 * @return lista de costum rules*/
 	public DefaultListModel<CostumRule> getNewList(){
 		return list;
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////UI para criar uma nova regra
-	/////////////////////////////////////////////////////////////////////////////////////
+	/**Metodo criador do layout da janela caso o user selecione "Create new.." no menu Edit*/
 	public void addComponentsCreate(final Defects defect){
 
-		//Adicionar componentes à UI que cria uma nova regra
+	
 
 		setTitle("Creat new " + defect.toString() + " rule");
 
@@ -251,7 +260,6 @@ public class CreatRuleGUI extends JDialog {
 
 
 
-		//Adicionar eventos à UI que cria uma nova regra
 		btnLoc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				txtFRule.setText(txtFRule.getText() + "LOC ");

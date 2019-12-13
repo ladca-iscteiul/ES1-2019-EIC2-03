@@ -55,9 +55,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ListSelectionModel;
 
+/**Classe representante da GUI principal.
+ * Tem como atributos a salientar os arrays para regras
+ *  inseridas pelo user: LM- LONG METHOD FE-FEATURE ENVY*/
+
 public class HomeGui extends JFrame {
 	
-	//Colums in Excel
+	
 	private static final int LOC = 4;
 	private static final int CYCLO = 5;
 	private static final int ATFD = 6;
@@ -67,7 +71,6 @@ public class HomeGui extends JFrame {
 	private static final int PMD = 10;
 	private static final int IS_FEATURE_ENVY = 11;
 	
-	//Atributes
 	private ExcelExporter excelExporter;
 	private DefectDetectionProgram iplasma;
 	private DefectDetectionProgram pmd;
@@ -76,7 +79,6 @@ public class HomeGui extends JFrame {
 	private DefaultListModel<CostumRule> customLM = new DefaultListModel<CostumRule>();	
 	private DefaultListModel<CostumRule> customFE = new DefaultListModel<CostumRule>();	
 
-	//Gui Componets
 	private JPanel contentPane;
 	private JMenuItem mntmImportExcelFile;
 	private JTextField txtFTrueIsLong;
@@ -100,7 +102,7 @@ public class HomeGui extends JFrame {
 	private JMenuItem mntmEditExistingFER;
 	private JMenuItem mntmSave;
 
-	
+	/**Metodo construtor da GUI Principal*/
 	public HomeGui() {
 
 		try {
@@ -139,7 +141,9 @@ public class HomeGui extends JFrame {
 		creatEvents();
 	}
 	
-	//Scanna o ficheiro excel e recolhe informações sobre a qualidade dos programas (iPlasma e PMD)
+	/**Metodo que recolhe informacoes sobre a qualidade das ferramentas
+	 *  e cria dois objetos DefectDetectionProgram, com os stats recolhidos, para cada uma
+	 *  das ferramentas */
 	private void getProgramStats() {
 		int iplasma_dci=0;
 		int iplasma_dii=0;
@@ -177,6 +181,8 @@ public class HomeGui extends JFrame {
 		iplasma = new DefectDetectionProgram(iplasma_dci, iplasma_dii, iplasma_adci, iplasma_adii);
 		pmd = new DefectDetectionProgram(pmd_dci, pmd_dii, pmd_adci, pmd_adii);
 	}
+	
+	/**Metodo que torna a janela visivel*/
 	
 	public void open() {
 		setVisible(true);
@@ -246,6 +252,10 @@ public class HomeGui extends JFrame {
 		}
 		
 	}
+	
+	/**Metodo que vai traduzir de string em codigo VBA (Excel) para uma string de codigo Java
+	 * @return String traduzida para java
+	 */
 	
 	public String translateRuleToJavaCode(int id, String rule) {
 		
@@ -348,6 +358,8 @@ public class HomeGui extends JFrame {
 		}
 	}
 
+	/**Metodo para adicionar o layout e os componentes na janela*/
+	
 	private void addComponents() {
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -1257,5 +1269,6 @@ public class HomeGui extends JFrame {
 		});
 		
 	}
+	
 }
 

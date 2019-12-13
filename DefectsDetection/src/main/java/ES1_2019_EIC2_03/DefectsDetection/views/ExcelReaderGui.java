@@ -33,6 +33,12 @@ public class ExcelReaderGui extends JDialog{
 	private JTable tableExcel;
 	private String[][] data;
 
+	/**
+	 * Construtor que ira receber o ficheiro excel num formato de
+	 * matriz de string e criar uma janela
+	 * @param data matriz representante do ficheiro excel
+	 */
+	
 	private ExcelReaderGui() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -59,6 +65,8 @@ public class ExcelReaderGui extends JDialog{
 		this.data = data;
 		addComponents();
 	}
+	
+	/**Metodo para adicionar o layout e a tabela a janela*/
 	
 	private void addComponents() {
 		
@@ -101,6 +109,8 @@ public class ExcelReaderGui extends JDialog{
 		contentPanel.setLayout(gl_contentPanel);
 		
 	}
+	
+	/**Metodo que torna a janela visivel*/
 	
 	public void open() {
 		setVisible(true);
