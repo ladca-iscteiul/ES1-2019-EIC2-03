@@ -20,6 +20,48 @@ class CostumRuleTest {
 	}
 	
 	@Test
+	void testgetTotalMehtodsEvaluated(){
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(70, lm.getTotalMehtodsEvaluated());
+	}
+	
+	@Test
+	void testgetCorrectEvaluations() {
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(30, lm.getCorrectEvaluations());
+	}
+	
+	@Test
+	void testgetIncorrectEvaluations() {
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(40, lm.getIncorrectEvaluations());
+	}
+	
+	@Test
+	void testgetDci() {
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(10, lm.getDci());
+	}
+
+	@Test
+	void testgetDii() {
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(20, lm.getDii());
+	}
+
+	@Test
+	void testgetAdci() {
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(20, lm.getAdci());
+	}
+
+	@Test
+	void testgetAdii() {
+		lm.setStats(10, 20, 20, 20);
+		assertEquals(20, lm.getAdii());
+	}
+	
+	@Test
 	void testCostumRule() {
 		assertNotNull(lm);
 		assertNotNull(fe);
