@@ -134,7 +134,7 @@ public class HomeGui extends JFrame {
 			}
 		}.execute();
 
-		
+		readMemory();
 		addComponents();
 		creatEvents();
 	}
