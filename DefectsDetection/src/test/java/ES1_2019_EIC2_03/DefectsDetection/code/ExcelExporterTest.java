@@ -1,38 +1,48 @@
 package ES1_2019_EIC2_03.DefectsDetection.code;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ExcelExporterTest extends TestCase {
-	
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import ES1_2019_EIC2_03.DefectsDetection.code.ExcelExporter;
+
+class ExcelExporterTest {
+
 	ExcelExporter e;
-
 	
-	protected void setUp() throws Exception {
-		e= new ExcelExporter();		
+	@BeforeEach
+	void init() {
+		e= new ExcelExporter();	
 	}
-
-	public void testExcelExporter() {
+	
+	@Test
+	void testExcelExporter() {
 		assertNotNull(e);
 	}
 
-	public void testNumRows() {
+	@Test
+	void testNumRows() {
 		assertEquals(420, e.NumRows());
 	}
 
+	@Test
 	public void testGetElementAt() {
 		assertEquals("false", e.getElementAt(420,10));
 	}
 
-	public void testGetLine() {
+	@Test
+	void testGetLine() {
 		assertEquals("MethodID<-->package<-->class<-->method<-->LOC<-->CYCLO<-->ATFD<-->LAA<-->is_long_method<-->iPlasma<-->PMD<-->is_feature_envy<-->", e.getLine(0));
 	}
 
-	public void testDataToMatrix() {
+	@Test
+	void testDataToMatrix() {
 		assertNotNull(e.dataToMatrix());
 	}
 
-	public void testGetInstance() {
+	@Test
+	void testGetInstance() {
 		assertNotNull(ExcelExporter.getInstance());
 	}
-
 }

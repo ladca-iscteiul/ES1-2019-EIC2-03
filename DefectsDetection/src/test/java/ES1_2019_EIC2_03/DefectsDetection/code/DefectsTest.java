@@ -1,20 +1,31 @@
 package ES1_2019_EIC2_03.DefectsDetection.code;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DefectsTest extends TestCase {
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import ES1_2019_EIC2_03.DefectsDetection.code.Defects;
+
+class DefectsTest {
 
 	private Defects d ;
 	private Defects e ;
-
-	protected void setUp() throws Exception {
+	
+	@BeforeEach
+	void init() throws Exception {
 		d = Defects.LONG_METHOD;
 		e = Defects.FEATURE_ENVY;
-	}	
+	}
 
-	public void testToString() {
+	@Test
+	void testToString() {
 		assertEquals("long_method()", d.toString());
 		assertEquals( "feature_envy()",e.toString());
 
 	}
+
 }
