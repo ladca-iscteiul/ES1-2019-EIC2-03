@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.views.ExcelReaderGui"
+        x="157" y="481"/>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.code.ExcelExporter"
+        x="544" y="101"/>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.code.DefectDetectionProgram"
+        x="824" y="133"/>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.views.CreatRuleGUI"
+        x="167" y="305">
+        <Communication destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.Defects"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.code.Main" x="596" y="10"/>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.code.CostumRule" x="549" y="205">
+        <Association
+            destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.Defects"
+            endpointName="defect" kind="Simple"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.views.HomeGui" x="181" y="186">
+        <Association
+            destinationClassName="ES1_2019_EIC2_03.DefectsDetection.views.CreatRuleGUI"
+            endpointName="newRuleViewer" kind="Simple"/>
+        <Association
+            destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.ExcelExporter"
+            endpointName="excelExporter" kind="Simple"/>
+        <Association
+            destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.DefectDetectionProgram"
+            endpointName="pmd" kind="Simple"/>
+        <Association
+            destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.DefectDetectionProgram"
+            endpointName="iplasma" kind="Simple"/>
+        <Association
+            destinationClassName="ES1_2019_EIC2_03.DefectsDetection.views.ExcelReaderGui"
+            endpointName="excelReader" kind="Simple"/>
+        <Communication destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.ExcelExporter"/>
+        <Communication destinationClassName="ES1_2019_EIC2_03.DefectsDetection.code.CostumRule"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="ES1_2019_EIC2_03.DefectsDetection.code.Defects" x="569" y="314"/>
+</ClassDiagram>

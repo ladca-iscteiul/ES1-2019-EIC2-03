@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="ES1_2019_EIC2_03.DefectsDetection.views" x="401" y="413">
+        <DependencyLink destination="ES1_2019_EIC2_03.DefectsDetection.code">
+            <Point x="639" y="303"/>
+        </DependencyLink>
+    </Package>
+    <Package name="ES1_2019_EIC2_03.DefectsDetection.resources" x="866" y="146"/>
+    <Package name="ES1_2019_EIC2_03.DefectsDetection.code" x="386" y="149">
+        <DependencyLink destination="ES1_2019_EIC2_03.DefectsDetection.resources"/>
+        <DependencyLink destination="ES1_2019_EIC2_03.DefectsDetection.views">
+            <Point x="476" y="293"/>
+        </DependencyLink>
+    </Package>
+</PackageAnalysis>
