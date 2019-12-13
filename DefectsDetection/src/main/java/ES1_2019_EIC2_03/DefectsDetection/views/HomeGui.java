@@ -81,6 +81,7 @@ public class HomeGui extends JFrame {
 	private JTextField txtFIPlasmaIsLong;
 	private JTextField txtFPMDIsLong;
 	private JButton btnGetEvaluation;
+	private JButton btnToolQPMD;
 	private JTextField txtFCostumIsLong;
 	private JTextField txtFCostumIsFeature;
 	private JMenuItem mntmCreatNewLMRule;
@@ -118,7 +119,7 @@ public class HomeGui extends JFrame {
 		creatEvents();
 	}
 	
-	//Scanna o ficheiro excel e recolhe informações sobre a qualidade do programa
+	//Scanna o ficheiro excel e recolhe informações sobre a qualidade dos programas (iPlasma e PMD)
 	private void getProgramStats() {
 		int iplasma_dci=0;
 		int iplasma_dii=0;
@@ -133,29 +134,28 @@ public class HomeGui extends JFrame {
 
 			String data[] = excelExporter.getLine(id).split("<-->");
 
-			if (data[IS_LONG_METHOD].equals(true) && data[IPLASMA].equals(true)) {
+			if (data[IS_LONG_METHOD].equals("true") && data[IPLASMA].equals("true")) {
 				iplasma_dci++;
-			}else if (data[IS_LONG_METHOD].equals(false) && data[IPLASMA].equals(true)) {
+			}else if (data[IS_LONG_METHOD].equals("false") && data[IPLASMA].equals("true")) {
 				iplasma_dii++;
-			}else if (data[IS_LONG_METHOD].equals(false) && data[IPLASMA].equals(false)) {
+			}else if (data[IS_LONG_METHOD].equals("false") && data[IPLASMA].equals("false")) {
 				iplasma_adci++;
-			}else if (data[IS_LONG_METHOD].equals(true) && data[IPLASMA].equals(false)) {
+			}else if (data[IS_LONG_METHOD].equals("true") && data[IPLASMA].equals("false")) {
 				iplasma_adii++;
 			}
 
-			if (data[IS_LONG_METHOD].equals(true) && data[PMD].equals(true)) {
+			if (data[IS_LONG_METHOD].equals("true") && data[PMD].equals("true")) {
 				pmd_dci++;
-			}else if (data[IS_LONG_METHOD].equals(false) && data[PMD].equals(true)) {
+			}else if (data[IS_LONG_METHOD].equals("false") && data[PMD].equals("true")) {
 				pmd_dii++;
-			}else if (data[IS_LONG_METHOD].equals(false) && data[PMD].equals(false)) {
+			}else if (data[IS_LONG_METHOD].equals("false") && data[PMD].equals("false")) {
 				pmd_adci++;
-			}else if (data[IS_LONG_METHOD].equals(true) && data[PMD].equals(false)) {
+			}else if (data[IS_LONG_METHOD].equals("true") && data[PMD].equals("false")) {
 				pmd_adii++;
 			}
-
-			iplasma = new DefectDetectionProgram(iplasma_adci, iplasma_dii, iplasma_adci, iplasma_adii);
-			pmd = new DefectDetectionProgram(pmd_adci, pmd_dii, pmd_adci, pmd_adii);
 		}
+		iplasma = new DefectDetectionProgram(iplasma_dci, iplasma_dii, iplasma_adci, iplasma_adii);
+		pmd = new DefectDetectionProgram(pmd_dci, pmd_dii, pmd_adci, pmd_adii);
 	}
 	
 	public void open() {
@@ -567,7 +567,7 @@ public class HomeGui extends JFrame {
 
 		btnToolQIPlasma.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		
-		JButton btnToolQPMD = new JButton("Tool Quality");
+		btnToolQPMD = new JButton("Tool Quality");
 		btnToolQPMD.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnToolQPMD.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		
@@ -893,7 +893,18 @@ public class HomeGui extends JFrame {
 		
 		btnToolQIPlasma.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.gc();
+				JOptionPane.showMessageDialog(HomeGui.this, "Total de métodos avaliados: " + iplasma.getTotalMehtodsEvaluated() + "\nTotal de avaliações certas: " + iplasma.getCorrectEvaluations()
+				+"\nTotal de avaliações erradas: " + iplasma.getIncorrectEvaluations()	+"\nDefeitos Corretamente Identificados: " + iplasma.getDci() +
+				"\nDefeitos Incorretamente Identificados: " + iplasma.getDii() +"\nAusências de Defeitos Corretamente Identificadas: " + iplasma.getAdci() + 
+				"\nAusências de Defeitos Incorretamente Identificadas: " + iplasma.getAdii(), "iPlasma", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
+		btnToolQPMD.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(HomeGui.this, "Total de métodos avaliados: " + pmd.getTotalMehtodsEvaluated() + "\nTotal de avaliações certas: " + pmd.getCorrectEvaluations()
+				+"\nTotal de avaliações erradas: " + pmd.getIncorrectEvaluations()	+"\nDefeitos Corretamente Identificados: " + pmd.getDci() + "\nDefeitos Incorretamente Identificados: " 
+				+ pmd.getDii() + "\nAusências de Defeitos Corretamente Identificadas: " + pmd.getAdci() + "\nAusências de Defeitos Incorretamente Identificadas: " + pmd.getAdii(), "PMD", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		

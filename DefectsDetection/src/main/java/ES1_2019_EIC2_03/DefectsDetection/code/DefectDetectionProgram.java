@@ -11,7 +11,7 @@ public class DefectDetectionProgram {
 		this.dci = dci;
 		this.dii = dii;
 		this.adci = adci;
-		this.adii = dci;
+		this.adii = adii;
 	}
 
 	public int getTotalMehtodsEvaluated(){
