@@ -356,7 +356,7 @@ public class HomeGui extends JFrame {
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmSave = new JMenuItem("Save ");
+		mntmSave = new JMenuItem("Save ");
 		mnNewMenu.add(mntmSave);
 		
 		mntmImportExcelFile = new JMenuItem("Import and View Excel File");
@@ -788,7 +788,7 @@ public class HomeGui extends JFrame {
 					JOptionPane.showMessageDialog(HomeGui.this, "Ocorreu um erro a guardar os dados", "Erro", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
-		});
+		}); 
 
 		
 		mntmExit.addActionListener(new ActionListener() {
