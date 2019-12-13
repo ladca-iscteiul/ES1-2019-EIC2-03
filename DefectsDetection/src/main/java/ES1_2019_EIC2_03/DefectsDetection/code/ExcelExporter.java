@@ -16,6 +16,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.xml.sax.helpers.ParserAdapter;
 
+/**
+ * Classe que ira representar a Folha Excel, sendo um Singleton pois nao temos
+ *  interesse em abrir a folha mais que uma vez*/
 public class ExcelExporter {
 
 	private final static ExcelExporter instance = new ExcelExporter();
@@ -24,28 +27,8 @@ public class ExcelExporter {
 	private FileInputStream file;
 	private XSSFWorkbook workbook;
 
-	//	
-	//	public static void main(String[] args) {
-	//	
-	//	ExcelExporter excelReader = null;
-	//
-	//        try {
-	//        	
-	//        	excelReader = new ExcelExporter();
-	//        	excelReader.openStream();
-	//
-	//        	System.out.println(excelReader.NumRows());
-	//        	System.out.println(excelReader.getElementAt(7, 7));
-	//        	for( String s : excelReader.getLine(45).split(" "))
-	//        		System.out.println(s);
-	//        	System.out.println(excelReader.NumRows());
-	//        } catch (Exception e) {
-	//            e.printStackTrace();
-	//        }
-	//    }
-	//	
+	/** Metodo que abre a Stream do Ficheiro Excel e guarda a sua informacao na variavel "sheet"*/
 
-	
 	private void openStream() {
 		try {
 			file = new FileInputStream(new File("src\\main\\java\\ES1_2019_EIC2_03\\DefectsDetection\\resources\\Long-Method.xlsx"));
@@ -57,6 +40,7 @@ public class ExcelExporter {
 			e.printStackTrace();
 		}
 	}
+	/** Metodo que fecha a Stream do Ficheiro Excel */
 
 	private void closeStream() {
 		try {
@@ -66,15 +50,17 @@ public class ExcelExporter {
 			e.printStackTrace();
 		}
 	}
-
+	/** Metodo usado para abrir o ficheiro Excel, guardar o seu conteudo numa variavel (sheet) e fechar a stream
+	 *  */
 	public ExcelExporter() {
 		openStream();
 		closeStream();
 	}
 
+	/**Metodo que retorna o numero linhas
+	 * @return numero de linhas */
 	public synchronized int NumRows() {
 
-		//openStream();
 
 		int numRows = sheet.getLastRowNum();
 
@@ -82,7 +68,11 @@ public class ExcelExporter {
 
 		return numRows;
 	}
-
+	/**Metodo que retorna o elemento na linha r e coluna c
+	 * @param r row
+	 * @param c column
+	 * @return elemento na localizacao especificada*/
+	
 	public synchronized String getElementAt(int r, int c) {
 
 		//openStream();
@@ -116,7 +106,9 @@ public class ExcelExporter {
 
 		return null;
 	}
-
+	/**Metodo que vai buscar uma linha numero r 
+	 * @param r row
+	 * @return linha especificada em formato string*/
 	public synchronized String getLine(int r) {
 
 		//openStream();
@@ -145,7 +137,11 @@ public class ExcelExporter {
 
 		return line;
 	}
-
+	/**Metodo que transforma a folha Excel guardada na variavel sheet, 
+	 * numa matriz de Strings que sera 
+	 * usada para construir a tabela "View Excel file" em "File"
+	 * @return matriz representante do ficheiro excel
+	*/
 	public synchronized String[][] dataToMatrix(){
 
 		//openStream();
@@ -160,7 +156,8 @@ public class ExcelExporter {
 
 		return data;
 	}
-
+	/**Getter da instacia do ExcelExporter
+	 * @return a  instancia de ExcelExporter*/
 	public static ExcelExporter getInstance() {
 		return instance;
 	}

@@ -20,7 +20,11 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
-
+/** Classe usada na criacao da janela referente a visualizacao 
+ * do ficheiro de excel num jDialog especifico
+ * no caso do user selecionar "View Excel File" em "File". É um
+ * singleton pois não precisamos de instanciar mais uma vez, dado que 
+ * a janela em si não é alterada.*/
 public class ExcelReaderGui extends JDialog{
 
 	private final static ExcelReaderGui instance = new ExcelReaderGui();
@@ -42,11 +46,15 @@ public class ExcelReaderGui extends JDialog{
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 	}
-	
+	/**Getter da instacia do ExcelReaderGUI
+	 * @return a  instancia de ExcelReaderGUI*/
 	public static ExcelReaderGui getInstance() {
 		return instance;
 	}
 	
+	/**Metodo que recebe o ficheiro excel num formato de 
+	matriz de string e vai ser responsavel por chamar o addComponents()
+	@param matriz representante do ficheiro excel */ 
 	public void setDataAndInitiate(String[][] data) {
 		this.data = data;
 		addComponents();
