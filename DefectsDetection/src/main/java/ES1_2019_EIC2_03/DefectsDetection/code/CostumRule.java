@@ -112,13 +112,17 @@ public class CostumRule {
 		}
 		
 		try {
-			interpreter.eval(code);
-			res = true;
-			
-		} catch (EvalError e) {
-			res = false;
-		}
+			Double.parseDouble(code);
+			return false;
+		}catch(NumberFormatException n) {
+			try {
+				interpreter.eval(code);
+				res = true;
 
+			} catch (EvalError e) {
+				res = false;
+			}
+		}
 		return res;
 	} 
 	
